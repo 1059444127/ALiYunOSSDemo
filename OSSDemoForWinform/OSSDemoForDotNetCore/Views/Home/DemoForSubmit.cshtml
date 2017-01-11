@@ -1,0 +1,71 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<script src="~/js/uploadtooss.js"></script>
+<script src="~/js/ossconfig.js"></script>
+<script>
+    function test() {                 
+        $("#policy").val(policyBase64);
+        $("#Signature").val(signature);
+        $("#OSSAccessKeyId").val(accessid);
+        $("#key").val("thisTestDemo")
+        $("#myform").submit();
+    }
+
+    function uploadbyajax()
+    {
+        var data = new FormData();
+        var currentfile = $("#file")[0].files[0];
+        var filename = (new Date).getTime() + '_' + currentfile.name;
+        data.append("OSSAccessKeyId", accessid);
+        data.append("Signature", signature);
+        data.append("policy", policyBase64);
+        data.append("key", filename);
+        data.append("file", currentfile)
+        alert(filename);
+        $.ajax({
+            url: host,
+            data: data,
+            processData: false,
+            cache: false,
+            async: false,
+            contentType: false,
+            //关键是要设置contentType 为false，不然发出的请求头 没有boundary
+            //该参数是让jQuery去判断contentType
+            type: "POST",
+            success: function (data, textStatus, request) {
+                debugger;
+                if (request.status == 204) {
+                    alert("goodluck")
+                }
+                else {
+                    alert(textStatus);
+                }              
+            },
+            error: function (error) {
+                alert(error.responseText);              
+            }
+        });
+
+    }
+
+    function uploadbyplugin() {
+
+
+    }
+</script>
+<form id="myform" action="http://test.oss-cn-shanghai.aliyuncs.com" method="post" enctype="multipart/form-data">
+    <div style="margin:20px;">
+
+        <input id="policy" type="hidden" name="policy" >
+        <input id="OSSAccessKeyId" type="hidden" name="OSSAccessKeyId" >
+        <input id="Signature" type="hidden" name="Signature" >
+
+        <input id="key" type="hidden" name="key">
+        <input id="file" name="file" type="file" /><button type="button" onclick="test()">submit上传</button>      
+        <input type="button" onclick="uploadbyajax()" value="ajax上传" />
+        <input type="button" onclick="uploadbyplugin()" value="第三方插件上传" />
+    </div>
+</form>

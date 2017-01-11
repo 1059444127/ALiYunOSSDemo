@@ -243,3 +243,4 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/OSSDemoForWinform/OSSDemoForDotNetCore/wwwroot/js/ossconfig_bak.js
